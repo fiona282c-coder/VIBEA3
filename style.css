@@ -365,3 +365,8 @@ footer b{color:#5a4147}
     padding:6px 8px;
   }
 }
+
+/* V4 clean outfit images: no clothing annotations */
+#wardrobe .outfit-hotspot{
+  display:none !important;
+}

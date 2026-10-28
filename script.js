@@ -26,7 +26,7 @@ function goTo(id){$$('.page').forEach(p=>p.classList.toggle('active',p.id===id))
 $$('[data-go]').forEach(b=>b.addEventListener('click',()=>goTo(b.dataset.go)));
 
 function renderLooks(){
-  $('#lookGrid').innerHTML=looks.map(l=>`<article class="look-card photo-look-card"><div class="look-photo-wrap"><img class="look-photo" src="${l.image}" alt="${l.name[lang]}" loading="lazy"><span class="look-code-chip">${l.code}</span></div><div class="look-copy"><span class="eyebrow">${l.tip[lang]}</span><h3>${l.name[lang]}</h3><p class="look-tip">${l.tip[lang]}</p><p>${l.desc[lang]}</p><div class="card-actions"><button data-open-tutorial="${l.id}">${lang==='zh'?'看影片教學':'Video tutorial'}</button><button data-learn-look="${l.id}">${lang==='zh'?'加入學習':'Track'}</button><button data-top-look="${l.id}">${lang==='zh'?'設為近期風格':'Use as recent style'}</button></div></div></article>`).join('');
+  $('#lookGrid').innerHTML=looks.map(l=>`<article class="look-card photo-look-card"><div class="look-photo-wrap"><img class="look-photo" src="${l.image}" alt="${l.name[lang]}" loading="lazy" onerror="this.onerror=null;this.src=\'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=85\'"><span class="look-code-chip">${l.code}</span></div><div class="look-copy"><span class="eyebrow">${l.tip[lang]}</span><h3>${l.name[lang]}</h3><p class="look-tip">${l.tip[lang]}</p><p>${l.desc[lang]}</p><div class="card-actions"><button data-open-tutorial="${l.id}">${lang==='zh'?'看影片教學':'Video tutorial'}</button><button data-learn-look="${l.id}">${lang==='zh'?'加入學習':'Track'}</button><button data-top-look="${l.id}">${lang==='zh'?'設為近期風格':'Use as recent style'}</button></div></div></article>`).join('');
   $$('[data-open-tutorial]').forEach(b=>b.onclick=()=>openTutorial(b.dataset.openTutorial));
   $$('[data-learn-look]').forEach(b=>b.onclick=()=>toggleLearned(b.dataset.learnLook));
   $$('[data-top-look]').forEach(b=>b.onclick=()=>{const p=store.get('progress',{learned:[],practice:0,mistakes:{Base:0,Eyes:0,Blush:0,Lips:0},recent:''});p.recent=b.dataset.topLook;store.set('progress',p);renderProgress();renderOutfits();});
@@ -108,8 +108,8 @@ function renderOutfits(){
       :(lang==='zh'?'妝容配對':'Makeup match');
     return `<article class="outfit-pin ${heights[i%heights.length]} ${matchedNow?'recommended-pin':''}">
       <div class="outfit-image-wrap">
-        <img src="${o.image}" alt="${o.name[lang]}" loading="lazy">
-        ${(o.tags||[]).map(t=>`<a class="outfit-hotspot" style="left:${t.x}%;top:${t.y}%" href="${t.url}" target="_blank" rel="noopener"><i></i><span>${t.label}</span></a>`).join('')}
+        <img src="${o.image}" alt="${o.name[lang]}" loading="lazy" onerror="this.onerror=null;this.src=\'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=85\'">
+        
         ${primaryMatch?`<button class="makeup-match-badge" type="button" data-match-look="${primaryMatch}" aria-label="${badgeLabel}">${badgeLabel}</button>`:''}
         <button class="vibea-pin-save ${saved.has(o.id)?'saved':''}" type="button" data-save-outfit="${o.id}" aria-label="Save outfit">${saved.has(o.id)?'♥':'♡'}</button>
       </div>
@@ -130,7 +130,7 @@ function renderOutfits(){
 }
 $('#outfitStyleFilter').addEventListener('change',renderOutfits);
 function renderNews(){ $('#newsGrid').innerHTML=news.map(n=>`<article class="news-card"><span class="eyebrow">${n.source}</span><h3>${n.title[lang]}</h3><p>${n.body[lang]}</p><a href="${n.url}" target="_blank" rel="noopener">${lang==='zh'?'閱讀來源':'Read source'} ↗</a></article>`).join('') }
-function renderCeleb(){ const map={'K-POP':'korean','90s':'french','RED':'western','Y2K':'y2k'}; $('#celebGrid').innerHTML=celebrityLooks.map(c=>`<article class="saved-card celeb-card"><div class="celeb-photo-wrap"><img class="celeb-photo" src="${c.image}" alt="${c.name[lang]}" loading="lazy"><span class="celeb-chip">${c.code}</span></div><h3>${c.name[lang]}</h3><p>${c.desc[lang]}</p><button class="celeb-link" data-open-tutorial="${map[c.code]||'korean'}">${lang==='zh'?'看影片教學':'Video tutorial'} ↗</button></article>`).join(''); $$('[data-open-tutorial]').forEach(b=>b.onclick=()=>openTutorial(b.dataset.openTutorial)); }
+function renderCeleb(){ const map={'K-POP':'korean','90s':'french','RED':'western','Y2K':'y2k'}; $('#celebGrid').innerHTML=celebrityLooks.map(c=>`<article class="saved-card celeb-card"><div class="celeb-photo-wrap"><img class="celeb-photo" src="${c.image}" alt="${c.name[lang]}" loading="lazy" onerror="this.onerror=null;this.src=\'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=85\'"><span class="celeb-chip">${c.code}</span></div><h3>${c.name[lang]}</h3><p>${c.desc[lang]}</p><button class="celeb-link" data-open-tutorial="${map[c.code]||'korean'}">${lang==='zh'?'看影片教學':'Video tutorial'} ↗</button></article>`).join(''); $$('[data-open-tutorial]').forEach(b=>b.onclick=()=>openTutorial(b.dataset.openTutorial)); }
 
 async function startCamera(){
   if(!$('#consentCheck').checked){alert(lang==='zh'?'請先閱讀並勾選隱私同意。':'Please read and accept the privacy notice first.');return}

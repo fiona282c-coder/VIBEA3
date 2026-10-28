@@ -87,3 +87,9 @@ Face landmarks load the MediaPipe model from Google/CDN at runtime. If the user 
 - Outfit makeup-match badges are now tappable.
 - Tapping a match sets the corresponding makeup as the recent style and jumps to that makeup card.
 - The top makeup recommendation pill is also tappable.
+
+## V4 fixes
+- Replaced the broken Clean Fit makeup image with a stable image source.
+- Added automatic fallback images for makeup, celebrity and outfit cards.
+- Removed clothing-image hotspot annotations from the Pinterest wardrobe feed.
+- Kept makeup-match buttons, save-heart buttons and product links below cards.
