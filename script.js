@@ -2,6 +2,14 @@ import {looks,products,outfits,news,celebrityLooks,translations} from './data.js
 import {analyzePortrait,analyzeFinishedMakeup} from './face-analysis.js';
 
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+
+// Keep only one mobile navigation. If an older VIBEA nav was left behind
+// by a previous manual edit, prefer the newest nav that contains Wardrobe.
+const mobileNavs=$$('.mobile-nav');
+if(mobileNavs.length>1){
+  const keep=mobileNavs.find(n=>n.querySelector('[data-go="wardrobe"]'))||mobileNavs[mobileNavs.length-1];
+  mobileNavs.forEach(n=>{if(n!==keep)n.remove()});
+}
 let lang=localStorage.getItem('vibea-lang')||'zh';
 let currentPhotoData=null, currentAnalysis=null, cameraStream=null;
 let tryonState={lip:'#b85d6a',blush:'#d88f92',intensity:.42};
