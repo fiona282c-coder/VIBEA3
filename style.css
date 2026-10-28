@@ -330,3 +330,38 @@ footer b{color:#5a4147}
     z-index:1000!important;
   }
 }
+
+
+/* V3 - interactive makeup matching */
+#outfitMakeupSync{
+  cursor:pointer;
+  font:inherit;
+  text-align:left;
+}
+#outfitMakeupSync:active{
+  transform:scale(.985);
+}
+#outfitGrid .makeup-match-badge{
+  border:0;
+  cursor:pointer;
+  max-width:72%;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-family:inherit;
+}
+#outfitGrid .makeup-match-badge:active{
+  transform:scale(.96);
+}
+.look-card.match-focus{
+  outline:3px solid rgba(215,130,146,.48);
+  box-shadow:0 0 0 8px rgba(215,130,146,.10), 0 18px 45px rgba(122,73,83,.14);
+  transition:.2s ease;
+}
+@media(max-width:720px){
+  #outfitGrid .makeup-match-badge{
+    max-width:78%;
+    font-size:8px;
+    padding:6px 8px;
+  }
+}

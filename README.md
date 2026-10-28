@@ -81,3 +81,9 @@ Face landmarks load the MediaPipe model from Google/CDN at runtime. If the user 
 - Restores tutorial video modal, comments and result sharing.
 - Keeps makeup, celebrity looks, reviews, shopping, bag, face analysis and bilingual UI.
 - Adds mobile wardrobe entry and Pinterest-style two-column fashion feed with item hotspots and saved pins.
+
+
+## V3 fix
+- Outfit makeup-match badges are now tappable.
+- Tapping a match sets the corresponding makeup as the recent style and jumps to that makeup card.
+- The top makeup recommendation pill is also tappable.

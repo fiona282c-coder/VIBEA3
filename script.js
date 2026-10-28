@@ -60,13 +60,32 @@ function renderProducts(){
   $('#productGrid').innerHTML=filtered.map((p,i)=>`<article class="product-card"><div class="product-art">${String(i+1).padStart(2,'0')}</div><small>${p.brand} · ${p.category.toUpperCase()}</small><h3>${p.name}</h3><p>${p.note[lang]}</p><strong>NT$ ${p.price.toLocaleString()}</strong><a href="${p.url}" target="_blank" rel="noopener">${lang==='zh'?'官方連結':'Official link'} ↗</a></article>`).join('')||`<p>${lang==='zh'?'沒有符合條件的產品。':'No matching products.'}</p>`;
 }
 ['budgetFilter','styleFilter','skinFilter','categoryFilter'].forEach(id=>$('#'+id).addEventListener('change',renderProducts));
+function focusMatchedMakeup(id){
+  if(!id)return;
+  const p=progressData();
+  p.recent=id;
+  store.set('progress',p);
+  renderProgress();
+  renderOutfits();
+  goTo('looks');
+  setTimeout(()=>{
+    const target=document.querySelector(`[data-top-look="${id}"]`)?.closest('.look-card');
+    if(target){
+      target.classList.add('match-focus');
+      target.scrollIntoView({behavior:'smooth',block:'center'});
+      setTimeout(()=>target.classList.remove('match-focus'),1800);
+    }
+  },120);
+}
 function renderOutfits(){
   const filter=$('#outfitStyleFilter');
   const f=filter?.value||'all', p=progressData(), recent=p.recent||'';
-  const rec=outfits.filter(o=>!recent||o.makeup?.includes(recent));
-  $('#outfitMakeupSync').textContent=recent
-    ?(lang==='zh'?`依妝容推薦：${looks.find(l=>l.id===recent)?.name.zh||recent}`:`Matched to makeup: ${looks.find(l=>l.id===recent)?.name.en||recent}`)
-    :(lang==='zh'?'依妝容推薦：尚未選擇近期風格':'Makeup match: no recent style selected');
+  const rec=recent?outfits.filter(o=>o.makeup?.includes(recent)):[];
+  const sync=$('#outfitMakeupSync');
+  sync.textContent=recent
+    ?(lang==='zh'?`依妝容推薦：${looks.find(l=>l.id===recent)?.name.zh||recent} · 點我查看妝容`:`Matched to makeup: ${looks.find(l=>l.id===recent)?.name.en||recent} · Tap to view`)
+    :(lang==='zh'?'依妝容推薦：尚未選擇近期風格 · 點我選妝容':'Makeup match: no recent style selected · Tap to choose');
+  sync.onclick=()=>recent?focusMatchedMakeup(recent):goTo('looks');
 
   const styles=['all','korean','japanese','clean','french','editorial','thai','y2k'];
   const styleNames={all:'All',korean:'Korean',japanese:'Japanese',clean:'Clean',french:'French',editorial:'Editorial',thai:'Thai',y2k:'Y2K'};
@@ -80,16 +99,29 @@ function renderOutfits(){
   const ordered=[...list].sort((a,b)=>(rec.includes(b)?1:0)-(rec.includes(a)?1:0));
   const saved=new Set(store.get('saved-outfits',[]));
   const heights=['vibea-tall','vibea-mid','vibea-short','vibea-mid'];
-  $('#outfitGrid').innerHTML=ordered.map((o,i)=>`<article class="outfit-pin ${heights[i%heights.length]} ${rec.includes(o)?'recommended-pin':''}">
-    <div class="outfit-image-wrap">
-      <img src="${o.image}" alt="${o.name[lang]}" loading="lazy">
-      ${(o.tags||[]).map(t=>`<a class="outfit-hotspot" style="left:${t.x}%;top:${t.y}%" href="${t.url}" target="_blank" rel="noopener"><i></i><span>${t.label}</span></a>`).join('')}
-      ${rec.includes(o)?`<span class="makeup-match-badge">${lang==='zh'?'妝容配對':'Makeup match'}</span>`:''}
-      <button class="vibea-pin-save ${saved.has(o.id)?'saved':''}" type="button" data-save-outfit="${o.id}" aria-label="Save outfit">${saved.has(o.id)?'♥':'♡'}</button>
-    </div>
-    <div class="outfit-pin-copy"><small>${o.style.toUpperCase()}</small><h3>${o.name[lang]}</h3><p>${o.desc[lang]}</p><div class="card-actions">${o.items.map(it=>`<a href="${it.url}" target="_blank" rel="noopener">${it.label} ↗</a>`).join('')}</div></div>
-  </article>`).join('')||`<p>${lang==='zh'?'這個分類目前沒有穿搭。':'No looks in this category yet.'}</p>`;
+  $('#outfitGrid').innerHTML=ordered.map((o,i)=>{
+    const primaryMatch=(recent&&o.makeup?.includes(recent))?recent:(o.makeup?.[0]||'');
+    const matchLook=looks.find(l=>l.id===primaryMatch);
+    const matchedNow=recent&&o.makeup?.includes(recent);
+    const badgeLabel=matchLook
+      ?(lang==='zh'?`妝容配對 · ${matchLook.name.zh}`:`Match · ${matchLook.name.en}`)
+      :(lang==='zh'?'妝容配對':'Makeup match');
+    return `<article class="outfit-pin ${heights[i%heights.length]} ${matchedNow?'recommended-pin':''}">
+      <div class="outfit-image-wrap">
+        <img src="${o.image}" alt="${o.name[lang]}" loading="lazy">
+        ${(o.tags||[]).map(t=>`<a class="outfit-hotspot" style="left:${t.x}%;top:${t.y}%" href="${t.url}" target="_blank" rel="noopener"><i></i><span>${t.label}</span></a>`).join('')}
+        ${primaryMatch?`<button class="makeup-match-badge" type="button" data-match-look="${primaryMatch}" aria-label="${badgeLabel}">${badgeLabel}</button>`:''}
+        <button class="vibea-pin-save ${saved.has(o.id)?'saved':''}" type="button" data-save-outfit="${o.id}" aria-label="Save outfit">${saved.has(o.id)?'♥':'♡'}</button>
+      </div>
+      <div class="outfit-pin-copy"><small>${o.style.toUpperCase()}</small><h3>${o.name[lang]}</h3><p>${o.desc[lang]}</p><div class="card-actions">${o.items.map(it=>`<a href="${it.url}" target="_blank" rel="noopener">${it.label} ↗</a>`).join('')}</div></div>
+    </article>`;
+  }).join('')||`<p>${lang==='zh'?'這個分類目前沒有穿搭。':'No looks in this category yet.'}</p>`;
 
+  $$('[data-match-look]').forEach(b=>b.onclick=(e)=>{
+    e.preventDefault();
+    e.stopPropagation();
+    focusMatchedMakeup(b.dataset.matchLook);
+  });
   $$('[data-save-outfit]').forEach(b=>b.onclick=()=>{
     const d=new Set(store.get('saved-outfits',[]));
     d.has(b.dataset.saveOutfit)?d.delete(b.dataset.saveOutfit):d.add(b.dataset.saveOutfit);
