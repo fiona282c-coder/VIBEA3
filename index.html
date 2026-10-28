@@ -300,7 +300,133 @@
       <div class="footer-links"><button data-go="news" data-i18n="news">美妝新聞</button><button data-go="reviews" data-i18n="reviews">產品評價</button><button data-go="celebrity" data-i18n="inspired">明星感妝容</button></div>
     </footer>
   </div>
+<!-- VIBEA Tutorial Video / Comments / Result Sharing Modal -->
+<div id="tutorialModal" class="tutorial-modal" hidden>
 
+  <div class="tutorial-modal-backdrop" data-close-tutorial></div>
+
+  <section
+    class="tutorial-modal-card"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="tutorialModalTitle"
+  >
+
+    <button
+      class="tutorial-close"
+      type="button"
+      data-close-tutorial
+      aria-label="Close"
+    >
+      ×
+    </button>
+
+    <span class="eyebrow">VIBEA VIDEO TUTORIAL</span>
+
+    <h2 id="tutorialModalTitle">
+      Makeup Tutorial
+    </h2>
+
+    <!-- Video -->
+    <div class="tutorial-video-wrap">
+
+      <iframe
+        id="tutorialVideo"
+        src=""
+        title="VIBEA Makeup Tutorial"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+
+    </div>
+
+    <div class="tutorial-modal-copy">
+
+      <div
+        id="tutorialVideoSource"
+        class="video-source-line"
+      ></div>
+
+      <button
+        id="shareTutorialBtn"
+        class="secondary-btn"
+        type="button"
+      >
+        分享教學 / Share
+      </button>
+
+    </div>
+
+
+    <!-- Community -->
+    <div class="tutorial-community">
+
+      <h3>
+        留言・分享成果
+        <br>
+        <small>Comments & Results</small>
+      </h3>
+
+      <form
+        id="tutorialCommentForm"
+        class="tutorial-comment-form"
+      >
+
+        <textarea
+          id="tutorialCommentText"
+          required
+          placeholder="分享你的心得、哪一步最難，或完成後的感想…"
+        ></textarea>
+
+
+        <div class="camera-actions">
+
+          <label class="secondary-btn file-btn">
+
+            <span>
+              上傳成果照 / Upload Result
+            </span>
+
+            <input
+              id="tutorialResultPhoto"
+              type="file"
+              accept="image/*"
+              hidden
+            >
+
+          </label>
+
+
+          <button
+            class="primary-btn"
+            type="submit"
+          >
+            發表 / Post
+          </button>
+
+        </div>
+
+
+        <img
+          id="tutorialResultPreview"
+          class="tutorial-result-preview"
+          alt="Makeup result preview"
+          hidden
+        >
+
+      </form>
+
+
+      <div
+        id="tutorialCommentList"
+        class="tutorial-comment-list"
+      ></div>
+
+    </div>
+
+  </section>
+
+</div>
   <script type="module" src="script.js"></script>
 </body>
 </html>
