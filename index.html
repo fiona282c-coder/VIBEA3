@@ -15,14 +15,15 @@
   <div class="app-shell">
     <header class="topbar">
       <button class="brand" data-go="home">VIBEA</button>
-  <nav class="mobile-nav">
-  <button data-go="home">首頁</button>
-  <button data-go="looks">妝容</button>
-  <button data-go="wardrobe">穿搭</button>
-  <button class="nav-main" data-go="analyze">＋</button>
-  <button data-go="bag">化妝包</button>
-  <button data-go="profile">我的</button>
-</nav>
+      <nav class="desktop-nav">
+        <button data-go="home" data-i18n="navHome">首頁</button>
+        <button data-go="analyze" data-i18n="navAnalyze">AI 臉部分析</button>
+        <button data-go="looks" data-i18n="navLooks">妝容</button>
+        <button data-go="celebrity" data-i18n="inspired">明星感妝容</button>
+        <button data-go="wardrobe" data-i18n="navStyle">穿搭</button>
+        <button data-go="shop" data-i18n="navShop">購物</button>
+        <button data-go="learn" data-i18n="navLearn">學習紀錄</button>
+      </nav>
       <div class="top-actions">
         <button id="langToggle" class="pill-btn" aria-label="Language">EN</button>
         <button class="ghost-btn" data-go="guide" data-i18n="guide">使用指南</button>
@@ -67,6 +68,9 @@
           <button class="quick-card" data-go="looks"><span>03</span><b data-i18n="qLooks">找今天的妝</b><small data-i18n="qLooksSub">8 種風格與妝效 tips</small></button>
           <button class="quick-card celeb-quick" data-go="celebrity"><span>04</span><b data-i18n="inspired">明星感妝容</b><small>Celebrity-inspired looks</small></button>
           <button class="quick-card" data-go="after"><span>05</span><b data-i18n="qAfter">畫完再分析</b><small data-i18n="qAfterSub">看看哪裡可以再調整</small></button>
+          <button class="quick-card" data-go="wardrobe"><span>06</span><b>穿搭推薦</b><small>依妝容推薦 · Pinterest 式瀑布流</small></button>
+          <button class="quick-card" data-go="tutorials"><span>07</span><b>妝容教學</b><small>影片教學 · 留言 · 分享成果</small></button>
+          <button class="quick-card" data-go="shop"><span>08</span><b>智慧購物</b><small>預算 · 風格 · 膚質篩選</small></button>
         </div>
       </section>
 
@@ -220,11 +224,13 @@
       </section>
 
       <section class="page" id="wardrobe">
-        <div class="page-head"><span class="eyebrow">STYLE THE LOOK</span><h2 data-i18n="wardrobeTitle">穿搭推薦</h2><p data-i18n="wardrobeSub">依妝容 vibe 搭配穿搭。商品按鈕連到品牌官方網站或商品頁。</p></div>
-        <div class="filter-bar">
+        <div class="page-head wardrobe-head"><span class="eyebrow">VIBEA STYLE BOARD</span><h2 data-i18n="wardrobeTitle">穿搭靈感</h2><p data-i18n="wardrobeSub">像 Pinterest 一樣往下滑，依你今天的妝容 vibe 找穿搭。點圖片上的標記可直接看相近單品。</p></div>
+        <div class="filter-bar wardrobe-filterbar">
           <select id="outfitStyleFilter"><option value="all">All</option><option value="clean">Clean</option><option value="korean">Korean</option><option value="japanese">Japanese</option><option value="editorial">Editorial</option><option value="french">French</option><option value="thai">Thai</option><option value="y2k">Y2K</option></select>
           <div class="makeup-sync" id="outfitMakeupSync">依妝容推薦：尚未選擇近期風格</div>
         </div>
+        <div class="vibea-style-chips" id="outfitStyleChips" aria-label="Outfit styles"></div>
+        <div class="vibea-feed-title"><h3>For your vibe</h3><span>Tap the dots to shop the look</span></div>
         <div class="outfit-grid" id="outfitGrid"></div>
       </section>
 
@@ -280,6 +286,9 @@
           <button data-go="bag"><span data-i18n="myBag">我的化妝包</span><span>›</span></button>
           <button data-go="learn"><span data-i18n="myProgress">我的學習紀錄</span><span>›</span></button>
           <button data-go="reviews"><span data-i18n="myReviews">我的評價</span><span>›</span></button>
+          <button data-go="wardrobe"><span>穿搭推薦</span><span>›</span></button>
+          <button data-go="tutorials"><span>妝容教學</span><span>›</span></button>
+          <button data-go="shop"><span>智慧購物</span><span>›</span></button>
           <button id="clearLocalData"><span data-i18n="deleteData">清除這台裝置上的 VIBEA 資料</span><span>›</span></button>
         </div>
       </section>
@@ -288,7 +297,7 @@
     <nav class="mobile-nav">
       <button data-go="home" data-i18n="navHome">首頁</button>
       <button data-go="looks" data-i18n="navLooks">妝容</button>
-        <button data-go="celebrity" data-i18n="inspired">明星感妝容</button>
+      <button data-go="wardrobe" data-i18n="navStyle">穿搭</button>
       <button class="nav-main" data-go="analyze">＋</button>
       <button data-go="bag" data-i18n="bagShort">化妝包</button>
       <button data-go="profile" data-i18n="me">我的</button>
@@ -296,136 +305,39 @@
 
     <footer>
       <div><b>VIBEA</b><span data-i18n="footerLine">Beauty should feel useful, not pushy.</span></div>
-      <div class="footer-links"><button data-go="news" data-i18n="news">美妝新聞</button><button data-go="reviews" data-i18n="reviews">產品評價</button><button data-go="celebrity" data-i18n="inspired">明星感妝容</button></div>
+      <div class="footer-links"><button data-go="wardrobe">穿搭推薦</button><button data-go="tutorials">妝容教學</button><button data-go="shop">智慧購物</button><button data-go="news" data-i18n="news">美妝新聞</button><button data-go="reviews" data-i18n="reviews">產品評價</button><button data-go="celebrity" data-i18n="inspired">明星感妝容</button></div>
     </footer>
   </div>
-<!-- VIBEA Tutorial Video / Comments / Result Sharing Modal -->
-<div id="tutorialModal" class="tutorial-modal" hidden>
 
-  <div class="tutorial-modal-backdrop" data-close-tutorial></div>
-
-  <section
-    class="tutorial-modal-card"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="tutorialModalTitle"
-  >
-
-    <button
-      class="tutorial-close"
-      type="button"
-      data-close-tutorial
-      aria-label="Close"
-    >
-      ×
-    </button>
-
-    <span class="eyebrow">VIBEA VIDEO TUTORIAL</span>
-
-    <h2 id="tutorialModalTitle">
-      Makeup Tutorial
-    </h2>
-
-    <!-- Video -->
-    <div class="tutorial-video-wrap">
-
-      <iframe
-        id="tutorialVideo"
-        src=""
-        title="VIBEA Makeup Tutorial"
-        allow="autoplay; fullscreen; picture-in-picture"
-        allowfullscreen
-      ></iframe>
-
-    </div>
-
-    <div class="tutorial-modal-copy">
-
-      <div
-        id="tutorialVideoSource"
-        class="video-source-line"
-      ></div>
-
-      <button
-        id="shareTutorialBtn"
-        class="secondary-btn"
-        type="button"
-      >
-        分享教學 / Share
-      </button>
-
-    </div>
-
-
-    <!-- Community -->
-    <div class="tutorial-community">
-
-      <h3>
-        留言・分享成果
-        <br>
-        <small>Comments & Results</small>
-      </h3>
-
-      <form
-        id="tutorialCommentForm"
-        class="tutorial-comment-form"
-      >
-
-        <textarea
-          id="tutorialCommentText"
-          required
-          placeholder="分享你的心得、哪一步最難，或完成後的感想…"
-        ></textarea>
-
-
-        <div class="camera-actions">
-
+  <div id="tutorialModal" class="tutorial-modal" hidden>
+    <div class="tutorial-modal-backdrop" data-close-tutorial></div>
+    <section class="tutorial-modal-card" role="dialog" aria-modal="true" aria-labelledby="tutorialModalTitle">
+      <button class="tutorial-close" type="button" data-close-tutorial aria-label="Close">×</button>
+      <span class="eyebrow">VIBEA VIDEO TUTORIAL</span>
+      <h2 id="tutorialModalTitle">Makeup Tutorial</h2>
+      <div class="tutorial-video-wrap">
+        <iframe id="tutorialVideo" src="" title="VIBEA makeup tutorial" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="tutorial-modal-copy">
+        <div id="tutorialVideoSource" class="video-source-line"></div>
+        <button id="shareTutorialBtn" type="button" class="secondary-btn">分享教學</button>
+      </div>
+      <div class="tutorial-community">
+        <h3>留言與分享成果</h3>
+        <form id="tutorialCommentForm" class="tutorial-comment-form">
+          <textarea id="tutorialCommentText" required maxlength="500" placeholder="分享你的練習心得…"></textarea>
           <label class="secondary-btn file-btn">
-
-            <span>
-              上傳成果照 / Upload Result
-            </span>
-
-            <input
-              id="tutorialResultPhoto"
-              type="file"
-              accept="image/*"
-              hidden
-            >
-
+            <span>上傳成果照</span>
+            <input id="tutorialResultPhoto" type="file" accept="image/*" hidden>
           </label>
+          <img id="tutorialResultPreview" class="tutorial-result-preview" alt="makeup result preview" hidden>
+          <button type="submit" class="primary-btn">送出留言</button>
+        </form>
+        <div id="tutorialCommentList" class="tutorial-comment-list"></div>
+      </div>
+    </section>
+  </div>
 
-
-          <button
-            class="primary-btn"
-            type="submit"
-          >
-            發表 / Post
-          </button>
-
-        </div>
-
-
-        <img
-          id="tutorialResultPreview"
-          class="tutorial-result-preview"
-          alt="Makeup result preview"
-          hidden
-        >
-
-      </form>
-
-
-      <div
-        id="tutorialCommentList"
-        class="tutorial-comment-list"
-      ></div>
-
-    </div>
-
-  </section>
-
-</div>
   <script type="module" src="script.js"></script>
 </body>
 </html>

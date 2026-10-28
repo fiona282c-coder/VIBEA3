@@ -75,3 +75,9 @@ Face landmarks load the MediaPipe model from Google/CDN at runtime. If the user 
 - Makeup tutorial cards now open playable Vimeo videos inside VIBEA (no YouTube redirect).
 - Tutorial modal supports comments, result-photo sharing, and Web Share API.
 - Shade matching is explicitly labeled as a photo-based starting estimate and should be confirmed with official try-on/in-store matching.
+
+
+## VIBEA3 Complete Pinterest Edition
+- Restores tutorial video modal, comments and result sharing.
+- Keeps makeup, celebrity looks, reviews, shopping, bag, face analysis and bilingual UI.
+- Adds mobile wardrobe entry and Pinterest-style two-column fashion feed with item hotspots and saved pins.

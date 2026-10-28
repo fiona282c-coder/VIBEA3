@@ -52,7 +52,43 @@ function renderProducts(){
   $('#productGrid').innerHTML=filtered.map((p,i)=>`<article class="product-card"><div class="product-art">${String(i+1).padStart(2,'0')}</div><small>${p.brand} · ${p.category.toUpperCase()}</small><h3>${p.name}</h3><p>${p.note[lang]}</p><strong>NT$ ${p.price.toLocaleString()}</strong><a href="${p.url}" target="_blank" rel="noopener">${lang==='zh'?'官方連結':'Official link'} ↗</a></article>`).join('')||`<p>${lang==='zh'?'沒有符合條件的產品。':'No matching products.'}</p>`;
 }
 ['budgetFilter','styleFilter','skinFilter','categoryFilter'].forEach(id=>$('#'+id).addEventListener('change',renderProducts));
-function renderOutfits(){const f=$('#outfitStyleFilter').value,p=progressData(),recent=p.recent||'';const rec=outfits.filter(o=>!recent||o.makeup?.includes(recent));$('#outfitMakeupSync').textContent=recent?(lang==='zh'?`依妝容推薦：${looks.find(l=>l.id===recent)?.name.zh||recent}`:`Matched to makeup: ${looks.find(l=>l.id===recent)?.name.en||recent}`):(lang==='zh'?'依妝容推薦：尚未選擇近期風格':'Makeup match: no recent style selected');const list=outfits.filter(o=>(f==='all'||o.style===f));const ordered=[...list].sort((a,b)=>(rec.includes(b)?1:0)-(rec.includes(a)?1:0));$('#outfitGrid').innerHTML=ordered.map(o=>`<article class="outfit-pin ${rec.includes(o)?'recommended-pin':''}"><div class="outfit-image-wrap"><img src="${o.image}" alt="${o.name[lang]}" loading="lazy">${(o.tags||[]).map(t=>`<a class="outfit-hotspot" style="left:${t.x}%;top:${t.y}%" href="${t.url}" target="_blank" rel="noopener"><i></i><span>${t.label}</span></a>`).join('')}${rec.includes(o)?`<span class="makeup-match-badge">${lang==='zh'?'妝容配對':'Makeup match'}</span>`:''}</div><div class="outfit-pin-copy"><small>${o.style.toUpperCase()}</small><h3>${o.name[lang]}</h3><p>${o.desc[lang]}</p><div class="card-actions">${o.items.map(it=>`<a href="${it.url}" target="_blank" rel="noopener">${it.label} ↗</a>`).join('')}</div></div></article>`).join('')};$('#outfitStyleFilter').addEventListener('change',renderOutfits);
+function renderOutfits(){
+  const filter=$('#outfitStyleFilter');
+  const f=filter?.value||'all', p=progressData(), recent=p.recent||'';
+  const rec=outfits.filter(o=>!recent||o.makeup?.includes(recent));
+  $('#outfitMakeupSync').textContent=recent
+    ?(lang==='zh'?`依妝容推薦：${looks.find(l=>l.id===recent)?.name.zh||recent}`:`Matched to makeup: ${looks.find(l=>l.id===recent)?.name.en||recent}`)
+    :(lang==='zh'?'依妝容推薦：尚未選擇近期風格':'Makeup match: no recent style selected');
+
+  const styles=['all','korean','japanese','clean','french','editorial','thai','y2k'];
+  const styleNames={all:'All',korean:'Korean',japanese:'Japanese',clean:'Clean',french:'French',editorial:'Editorial',thai:'Thai',y2k:'Y2K'};
+  const chips=$('#outfitStyleChips');
+  if(chips){
+    chips.innerHTML=styles.map(s=>`<button class="vibea-style-chip ${s===f?'active':''}" data-outfit-chip="${s}">${styleNames[s]}</button>`).join('');
+    $$('[data-outfit-chip]').forEach(b=>b.onclick=()=>{filter.value=b.dataset.outfitChip;renderOutfits()});
+  }
+
+  const list=outfits.filter(o=>(f==='all'||o.style===f));
+  const ordered=[...list].sort((a,b)=>(rec.includes(b)?1:0)-(rec.includes(a)?1:0));
+  const saved=new Set(store.get('saved-outfits',[]));
+  const heights=['vibea-tall','vibea-mid','vibea-short','vibea-mid'];
+  $('#outfitGrid').innerHTML=ordered.map((o,i)=>`<article class="outfit-pin ${heights[i%heights.length]} ${rec.includes(o)?'recommended-pin':''}">
+    <div class="outfit-image-wrap">
+      <img src="${o.image}" alt="${o.name[lang]}" loading="lazy">
+      ${(o.tags||[]).map(t=>`<a class="outfit-hotspot" style="left:${t.x}%;top:${t.y}%" href="${t.url}" target="_blank" rel="noopener"><i></i><span>${t.label}</span></a>`).join('')}
+      ${rec.includes(o)?`<span class="makeup-match-badge">${lang==='zh'?'妝容配對':'Makeup match'}</span>`:''}
+      <button class="vibea-pin-save ${saved.has(o.id)?'saved':''}" type="button" data-save-outfit="${o.id}" aria-label="Save outfit">${saved.has(o.id)?'♥':'♡'}</button>
+    </div>
+    <div class="outfit-pin-copy"><small>${o.style.toUpperCase()}</small><h3>${o.name[lang]}</h3><p>${o.desc[lang]}</p><div class="card-actions">${o.items.map(it=>`<a href="${it.url}" target="_blank" rel="noopener">${it.label} ↗</a>`).join('')}</div></div>
+  </article>`).join('')||`<p>${lang==='zh'?'這個分類目前沒有穿搭。':'No looks in this category yet.'}</p>`;
+
+  $$('[data-save-outfit]').forEach(b=>b.onclick=()=>{
+    const d=new Set(store.get('saved-outfits',[]));
+    d.has(b.dataset.saveOutfit)?d.delete(b.dataset.saveOutfit):d.add(b.dataset.saveOutfit);
+    store.set('saved-outfits',[...d]); renderOutfits();
+  });
+}
+$('#outfitStyleFilter').addEventListener('change',renderOutfits);
 function renderNews(){ $('#newsGrid').innerHTML=news.map(n=>`<article class="news-card"><span class="eyebrow">${n.source}</span><h3>${n.title[lang]}</h3><p>${n.body[lang]}</p><a href="${n.url}" target="_blank" rel="noopener">${lang==='zh'?'閱讀來源':'Read source'} ↗</a></article>`).join('') }
 function renderCeleb(){ const map={'K-POP':'korean','90s':'french','RED':'western','Y2K':'y2k'}; $('#celebGrid').innerHTML=celebrityLooks.map(c=>`<article class="saved-card celeb-card"><div class="celeb-photo-wrap"><img class="celeb-photo" src="${c.image}" alt="${c.name[lang]}" loading="lazy"><span class="celeb-chip">${c.code}</span></div><h3>${c.name[lang]}</h3><p>${c.desc[lang]}</p><button class="celeb-link" data-open-tutorial="${map[c.code]||'korean'}">${lang==='zh'?'看影片教學':'Video tutorial'} ↗</button></article>`).join(''); $$('[data-open-tutorial]').forEach(b=>b.onclick=()=>openTutorial(b.dataset.openTutorial)); }
 
