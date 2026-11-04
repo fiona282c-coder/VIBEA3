@@ -18,6 +18,46 @@ const store={
   set(k,v){localStorage.setItem('vibea-'+k,JSON.stringify(v))}
 };
 
+/* V5: larger wardrobe pool for Pinterest-style endless feed */
+const VIBEA_EXTRA_OUTFITS = [
+  {id:'korean-cream-cardigan',style:'korean',makeup:['korean'],image:'https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=900&q=84',name:{zh:'奶油針織＋深色長裙',en:'Cream Knit + Dark Maxi'},desc:{zh:'柔和奶油色與深色長裙，適合水光韓系妝。',en:'Soft cream knit with a dark maxi for dewy Korean makeup.'},items:[{label:'UNIQLO Knitwear',url:'https://www.uniqlo.com/tw/zh_TW/women/tops/knitwear'},{label:'ZARA Skirts',url:'https://www.zara.com/tw/zt/woman-skirts-l1299.html'}]},
+  {id:'korean-denim-soft',style:'korean',makeup:['korean','clean'],image:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=84',name:{zh:'短版上衣＋寬版丹寧',en:'Cropped Top + Wide Denim'},desc:{zh:'清爽比例與寬鬆丹寧，適合日常韓系與 Clean Fit。',en:'Crisp proportions and relaxed denim for Korean or Clean Fit looks.'},items:[{label:'ZARA Tops',url:'https://www.zara.com/tw/zt/woman-tops-l1322.html'},{label:'UNIQLO Jeans',url:'https://www.uniqlo.com/tw/zh_TW/women/bottoms/jeans'}]},
+  {id:'korean-pastel-layer',style:'korean',makeup:['korean'],image:'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=84',name:{zh:'霧粉層次＋百褶裙',en:'Dusty Pink Layers + Pleats'},desc:{zh:'低飽和粉與百褶裙增加柔和感。',en:'Muted pink and pleats create a softer silhouette.'},items:[{label:'ZARA Woman',url:'https://www.zara.com/tw/'},{label:'CHARLES & KEITH',url:'https://www.charleskeith.com/tw'}]},
+  {id:'korean-monochrome',style:'korean',makeup:['korean','clean'],image:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=84',name:{zh:'灰白單色系穿搭',en:'Grey & White Monochrome'},desc:{zh:'低對比灰白色讓妝容更顯乾淨。',en:'Low-contrast grey and white keeps the face looking clean.'},items:[{label:'UNIQLO Women',url:'https://www.uniqlo.com/tw/zh_TW/women'}]},
+
+  {id:'clean-white-shirt',style:'clean',makeup:['clean'],image:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=84',name:{zh:'白襯衫＋直筒褲',en:'White Shirt + Straight Trousers'},desc:{zh:'乾淨俐落的基本款組合。',en:'A crisp, minimal everyday combination.'},items:[{label:'UNIQLO Shirts',url:'https://www.uniqlo.com/tw/zh_TW/women/tops/shirts-and-blouses'},{label:'ZARA Trousers',url:'https://www.zara.com/tw/zt/woman-trousers-l1335.html'}]},
+  {id:'clean-neutral-rack',style:'clean',makeup:['clean'],image:'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&w=900&q=84',name:{zh:'中性色膠囊衣櫥',en:'Neutral Capsule Wardrobe'},desc:{zh:'黑、白、駝色的極簡膠囊搭配。',en:'A minimal capsule of black, white and camel.'},items:[{label:'COS Women',url:'https://www.cos.com/'},{label:'UNIQLO',url:'https://www.uniqlo.com/tw/zh_TW/women'}]},
+  {id:'clean-black-jacket',style:'clean',makeup:['clean','western'],image:'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=900&q=84',name:{zh:'黑色外套＋極簡內搭',en:'Black Jacket + Minimal Base'},desc:{zh:'用俐落外套增加輪廓感。',en:'A structured jacket adds definition without visual clutter.'},items:[{label:'ZARA Jackets',url:'https://www.zara.com/tw/zt/woman-jackets-l1114.html'}]},
+  {id:'clean-denim-basic',style:'clean',makeup:['clean'],image:'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=900&q=84',name:{zh:'丹寧基本款',en:'Everyday Denim Basics'},desc:{zh:'簡單丹寧與素色上衣最適合日常 Clean Fit。',en:'Simple denim and solid tops for everyday Clean Fit.'},items:[{label:'Levi’s Women',url:'https://www.levi.com.tw/'},{label:'UNIQLO Tops',url:'https://www.uniqlo.com/tw/zh_TW/women/tops'}]},
+
+  {id:'japanese-knit-midi',style:'japanese',makeup:['japanese'],image:'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=900&q=84',name:{zh:'柔色針織＋中長裙',en:'Soft Knit + Midi Skirt'},desc:{zh:'米白、灰藍與霧粉是日系柔霧妝的安全組合。',en:'Ivory, muted blue and dusty pink suit soft Japanese makeup.'},items:[{label:'UNIQLO Knitwear',url:'https://www.uniqlo.com/tw/zh_TW/women/tops/knitwear'},{label:'ZARA Midi Skirts',url:'https://www.zara.com/tw/zt/woman-skirts-l1299.html'}]},
+  {id:'japanese-layered-shirt',style:'japanese',makeup:['japanese','clean'],image:'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=900&q=84',name:{zh:'襯衫疊穿＋寬鬆下身',en:'Layered Shirt + Relaxed Bottom'},desc:{zh:'寬鬆輪廓配柔和眼妝很有日雜感。',en:'Relaxed proportions pair well with soft eye makeup.'},items:[{label:'MUJI Women',url:'https://www.muji.com/tw/'},{label:'UNIQLO',url:'https://www.uniqlo.com/tw/zh_TW/women'}]},
+  {id:'japanese-soft-blue',style:'japanese',makeup:['japanese'],image:'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=900&q=84',name:{zh:'灰藍柔色裙裝',en:'Muted Blue Soft Styling'},desc:{zh:'柔霧色系讓整體更有空氣感。',en:'Muted tones create an airy, soft-focus impression.'},items:[{label:'ZARA',url:'https://www.zara.com/tw/'},{label:'UNIQLO',url:'https://www.uniqlo.com/tw/zh_TW/women'}]},
+  {id:'japanese-casual',style:'japanese',makeup:['japanese','clean'],image:'https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?auto=format&fit=crop&w=900&q=84',name:{zh:'日系休閒層次',en:'Japanese Casual Layers'},desc:{zh:'休閒單品用同色系做出層次。',en:'Casual pieces layered within one tonal family.'},items:[{label:'BEAMS',url:'https://www.beams.co.jp/'},{label:'UNIQLO',url:'https://www.uniqlo.com/tw/zh_TW/women'}]},
+
+  {id:'french-camisole',style:'french',makeup:['french'],image:'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=900&q=84',name:{zh:'細肩帶＋高腰長褲',en:'Camisole + High-Waist Trousers'},desc:{zh:'簡單露膚與高腰線條帶出法式鬆弛感。',en:'Simple skin exposure and a high waist create effortless French ease.'},items:[{label:'ZARA Tops',url:'https://www.zara.com/tw/zt/woman-tops-l1322.html'},{label:'ZARA Trousers',url:'https://www.zara.com/tw/zt/woman-trousers-l1335.html'}]},
+  {id:'french-stripes',style:'french',makeup:['french'],image:'https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?auto=format&fit=crop&w=900&q=84',name:{zh:'條紋上衣＋深色下身',en:'Striped Top + Dark Bottom'},desc:{zh:'經典條紋和莓果唇很適合復古法式感。',en:'Classic stripes pair naturally with a berry lip.'},items:[{label:'UNIQLO Stripes',url:'https://www.uniqlo.com/tw/zh_TW/women/tops'},{label:'ZARA',url:'https://www.zara.com/tw/'}]},
+  {id:'french-black-dress',style:'french',makeup:['french','western'],image:'https://images.unsplash.com/photo-1537832816519-689ad163238b?auto=format&fit=crop&w=900&q=84',name:{zh:'小黑裙＋低調金飾',en:'Little Black Dress + Fine Gold'},desc:{zh:'極簡黑色讓紅棕或莓果唇成為重點。',en:'Minimal black lets red-brown or berry lips take focus.'},items:[{label:'ZARA Dresses',url:'https://www.zara.com/tw/zt/woman-dresses-l1066.html'},{label:'ZARA Jewellery',url:'https://www.zara.com/tw/zt/woman-accessories-jewellery-l1015.html'}]},
+  {id:'french-denim-jacket',style:'french',makeup:['french','clean'],image:'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&w=900&q=84',name:{zh:'丹寧外套＋素色內搭',en:'Denim Jacket + Simple Base'},desc:{zh:'帶一點復古但不刻意。',en:'A subtle vintage note without feeling overstyled.'},items:[{label:'Levi’s',url:'https://www.levi.com.tw/'},{label:'UNIQLO',url:'https://www.uniqlo.com/tw/zh_TW/women'}]},
+
+  {id:'editorial-black-blazer',style:'editorial',makeup:['western','chinese'],image:'https://images.unsplash.com/photo-1551232864-3f0890e580d9?auto=format&fit=crop&w=900&q=84',name:{zh:'黑色西裝＋金屬飾品',en:'Black Blazer + Metal Accents'},desc:{zh:'結構西裝與金屬配件呼應立體妝。',en:'Structured tailoring and metal accents reinforce sculpted makeup.'},items:[{label:'ZARA Blazers',url:'https://www.zara.com/tw/zt/woman-blazers-l1055.html'},{label:'CHARLES & KEITH',url:'https://www.charleskeith.com/tw'}]},
+  {id:'editorial-monochrome',style:'editorial',makeup:['western','chinese'],image:'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=900&q=84',name:{zh:'黑白高對比層次',en:'High-Contrast Monochrome'},desc:{zh:'高對比黑白讓輪廓更強。',en:'High-contrast black and white makes the silhouette feel sharper.'},items:[{label:'COS',url:'https://www.cos.com/'},{label:'ZARA',url:'https://www.zara.com/tw/'}]},
+  {id:'editorial-longcoat',style:'editorial',makeup:['western'],image:'https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=900&q=84',name:{zh:'長版大衣＋尖頭鞋',en:'Long Coat + Pointed Shoes'},desc:{zh:'拉長比例、俐落又有紅毯感。',en:'Elongated proportions for a polished, camera-ready feel.'},items:[{label:'ZARA Coats',url:'https://www.zara.com/tw/zt/woman-outerwear-l1184.html'},{label:'CHARLES & KEITH Shoes',url:'https://www.charleskeith.com/tw/shoes'}]},
+  {id:'editorial-leather',style:'editorial',makeup:['western','y2k'],image:'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=900&q=84',name:{zh:'皮革外套＋窄版下身',en:'Leather Jacket + Slim Bottom'},desc:{zh:'皮革質感適合霧面立體妝或 Y2K。',en:'Leather texture works with matte sculpting or Y2K makeup.'},items:[{label:'ZARA Jackets',url:'https://www.zara.com/tw/zt/woman-jackets-l1114.html'}]},
+
+  {id:'thai-caramel',style:'thai',makeup:['thai'],image:'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=900&q=84',name:{zh:'焦糖色上衣＋金色配件',en:'Caramel Top + Gold Accents'},desc:{zh:'暖調焦糖與金色最能襯托泰式 Soft Glam。',en:'Caramel and gold flatter warm Thai Soft Glam.'},items:[{label:'ZARA Tops',url:'https://www.zara.com/tw/zt/woman-tops-l1322.html'},{label:'ZARA Jewellery',url:'https://www.zara.com/tw/zt/woman-accessories-jewellery-l1015.html'}]},
+  {id:'thai-black-gold',style:'thai',makeup:['thai','western'],image:'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?auto=format&fit=crop&w=900&q=84',name:{zh:'黑色合身輪廓＋金飾',en:'Black Fitted Look + Gold'},desc:{zh:'黑金組合讓暖調修容更有存在感。',en:'Black and gold make warm sculpting feel more dramatic.'},items:[{label:'ZARA',url:'https://www.zara.com/tw/'},{label:'CHARLES & KEITH',url:'https://www.charleskeith.com/tw'}]},
+  {id:'thai-satin',style:'thai',makeup:['thai'],image:'https://images.unsplash.com/photo-1537832816519-689ad163238b?auto=format&fit=crop&w=900&q=84',name:{zh:'緞面上衣＋暖棕下身',en:'Satin Top + Warm Brown Bottom'},desc:{zh:'緞面光澤和絲絨半霧面底妝形成漂亮對比。',en:'Satin sheen contrasts nicely with a velvet semi-matte base.'},items:[{label:'ZARA Satin',url:'https://www.zara.com/tw/zt/woman-tops-l1322.html'}]},
+  {id:'thai-evening',style:'thai',makeup:['thai','western'],image:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=900&q=84',name:{zh:'晚間合身洋裝',en:'Fitted Evening Dress'},desc:{zh:'適合暖棕眼妝與立體修容。',en:'Pairs well with warm brown eyes and sculpted contour.'},items:[{label:'ZARA Dresses',url:'https://www.zara.com/tw/zt/woman-dresses-l1066.html'}]},
+
+  {id:'y2k-crop-metal',style:'y2k',makeup:['y2k'],image:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=900&q=84',name:{zh:'短版上衣＋銀色配件',en:'Cropped Top + Silver Accents'},desc:{zh:'銀色配件呼應冰感眼影與亮唇。',en:'Silver accents echo frosted eyes and glossy lips.'},items:[{label:'ZARA Tops',url:'https://www.zara.com/tw/zt/woman-tops-l1322.html'},{label:'CHARLES & KEITH Bags',url:'https://www.charleskeith.com/tw/bags'}]},
+  {id:'y2k-denim',style:'y2k',makeup:['y2k','clean'],image:'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=900&q=84',name:{zh:'低腰丹寧＋短版上衣',en:'Low-Rise Denim + Crop Top'},desc:{zh:'經典 2000s 比例，搭亮唇很完整。',en:'Classic 2000s proportions completed with a glossy lip.'},items:[{label:'Levi’s',url:'https://www.levi.com.tw/'},{label:'ZARA Tops',url:'https://www.zara.com/tw/zt/woman-tops-l1322.html'}]},
+  {id:'y2k-track',style:'y2k',makeup:['y2k'],image:'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=900&q=84',name:{zh:'運動外套＋迷你下身',en:'Track Jacket + Mini Bottom'},desc:{zh:'運動感單品配金屬眼妝更有潮流感。',en:'Sporty pieces make metallic eye makeup feel more current.'},items:[{label:'adidas Women',url:'https://www.adidas.com.tw/'},{label:'ZARA',url:'https://www.zara.com/tw/'}]},
+  {id:'y2k-pink',style:'y2k',makeup:['y2k','korean'],image:'https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=900&q=84',name:{zh:'粉色短版＋亮面配件',en:'Pink Crop + Glossy Accessories'},desc:{zh:'粉色與亮面材質適合 Y2K 粉紫眼妝。',en:'Pink and glossy textures suit frosted Y2K eye makeup.'},items:[{label:'ZARA',url:'https://www.zara.com/tw/'},{label:'CHARLES & KEITH',url:'https://www.charleskeith.com/tw'}]}
+];
+VIBEA_EXTRA_OUTFITS.forEach(x=>{ if(!outfits.some(o=>o.id===x.id)) outfits.push(x); });
+
+
 function t(key){return translations[lang]?.[key]||translations.zh[key]||key}
 function localize(){document.documentElement.lang=lang==='zh'?'zh-Hant':'en'; $$('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(t(k))el.textContent=t(k)}); $('#langToggle').textContent=lang==='zh'?'EN':'中'; renderAll();}
 $('#langToggle').addEventListener('click',()=>{lang=lang==='zh'?'en':'zh';localStorage.setItem('vibea-lang',lang);localize()});
@@ -66,7 +106,7 @@ function focusMatchedMakeup(id){
   p.recent=id;
   store.set('progress',p);
   renderProgress();
-  renderOutfits();
+  resetOutfitFeed();
   goTo('looks');
   setTimeout(()=>{
     const target=document.querySelector(`[data-top-look="${id}"]`)?.closest('.look-card');
@@ -77,11 +117,135 @@ function focusMatchedMakeup(id){
     }
   },120);
 }
+
+let outfitFeedObserver=null;
+let outfitFeedPool=[];
+let outfitFeedIndex=0;
+let outfitFeedCycle=0;
+const OUTFIT_BATCH_SIZE=10;
+
+function outfitShuffle(list, seed=0){
+  const a=[...list];
+  for(let i=a.length-1;i>0;i--){
+    const j=(Math.abs(Math.sin((i+1)*(seed+17))*100000)|0)%(i+1);
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function buildOutfitCard(o, visualIndex){
+  const recent=progressData().recent||'';
+  const saved=new Set(store.get('saved-outfits',[]));
+  const primaryMatch=(recent&&o.makeup?.includes(recent))?recent:(o.makeup?.[0]||'');
+  const matchLook=looks.find(l=>l.id===primaryMatch);
+  const matchedNow=!!(recent&&o.makeup?.includes(recent));
+  const badgeLabel=matchLook
+    ?(lang==='zh'?`妝容配對 · ${matchLook.name.zh}`:`Match · ${matchLook.name.en}`)
+    :(lang==='zh'?'妝容配對':'Makeup match');
+  const heights=['vibea-tall','vibea-mid','vibea-short','vibea-mid','vibea-tall','vibea-short'];
+
+  return `<article class="outfit-pin ${heights[visualIndex%heights.length]} ${matchedNow?'recommended-pin':''}">
+    <div class="outfit-image-wrap">
+      <img src="${o.image}" alt="${o.name[lang]}" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=85'">
+      ${primaryMatch?`<button class="makeup-match-badge" type="button" data-match-look="${primaryMatch}" aria-label="${badgeLabel}">${badgeLabel}</button>`:''}
+      <button class="vibea-pin-save ${saved.has(o.id)?'saved':''}" type="button" data-save-outfit="${o.id}" aria-label="Save outfit">${saved.has(o.id)?'♥':'♡'}</button>
+    </div>
+    <div class="outfit-pin-copy">
+      <small>${o.style.toUpperCase()}</small>
+      <h3>${o.name[lang]}</h3>
+      <p>${o.desc[lang]}</p>
+      <div class="card-actions">${(o.items||[]).map(it=>`<a href="${it.url}" target="_blank" rel="noopener">${it.label} ↗</a>`).join('')}</div>
+    </div>
+  </article>`;
+}
+
+function bindOutfitCardActions(scope=document){
+  scope.querySelectorAll('[data-match-look]').forEach(b=>{
+    b.onclick=(e)=>{
+      e.preventDefault();
+      e.stopPropagation();
+      focusMatchedMakeup(b.dataset.matchLook);
+    };
+  });
+  scope.querySelectorAll('[data-save-outfit]').forEach(b=>{
+    b.onclick=(e)=>{
+      e.preventDefault();
+      e.stopPropagation();
+      const d=new Set(store.get('saved-outfits',[]));
+      const id=b.dataset.saveOutfit;
+      if(d.has(id)){ d.delete(id); b.classList.remove('saved'); b.textContent='♡'; }
+      else { d.add(id); b.classList.add('saved'); b.textContent='♥'; }
+      store.set('saved-outfits',[...d]);
+    };
+  });
+}
+
+function appendOutfitBatch(){
+  const grid=$('#outfitGrid');
+  if(!grid||!outfitFeedPool.length)return;
+
+  const frag=document.createDocumentFragment();
+  const holder=document.createElement('div');
+  let html='';
+
+  for(let i=0;i<OUTFIT_BATCH_SIZE;i++){
+    if(outfitFeedIndex>=outfitFeedPool.length){
+      outfitFeedCycle++;
+      outfitFeedPool=outfitShuffle(outfitFeedPool,outfitFeedCycle+13);
+      outfitFeedIndex=0;
+    }
+    const o=outfitFeedPool[outfitFeedIndex++];
+    const virtualIndex=(outfitFeedCycle*outfitFeedPool.length)+outfitFeedIndex+i;
+    html+=buildOutfitCard(o,virtualIndex);
+  }
+
+  holder.innerHTML=html;
+  while(holder.firstChild) frag.appendChild(holder.firstChild);
+  grid.appendChild(frag);
+  bindOutfitCardActions(grid);
+}
+
+function setupOutfitInfiniteScroll(){
+  outfitFeedObserver?.disconnect();
+  let sentinel=$('#outfitFeedSentinel');
+  if(!sentinel){
+    sentinel=document.createElement('div');
+    sentinel.id='outfitFeedSentinel';
+    sentinel.className='outfit-feed-sentinel';
+    sentinel.innerHTML=`<span>${lang==='zh'?'繼續探索穿搭…':'Keep exploring…'}</span>`;
+    $('#wardrobe').appendChild(sentinel);
+  }
+  outfitFeedObserver=new IntersectionObserver(entries=>{
+    if(entries.some(e=>e.isIntersecting)) appendOutfitBatch();
+  },{rootMargin:'900px 0px 900px 0px'});
+  outfitFeedObserver.observe(sentinel);
+}
+
+function resetOutfitFeed(){
+  const filter=$('#outfitStyleFilter');
+  const f=filter?.value||'all';
+  const recent=progressData().recent||'';
+  const base=outfits.filter(o=>f==='all'||o.style===f);
+  const matched=recent?base.filter(o=>o.makeup?.includes(recent)):[];
+  const rest=base.filter(o=>!matched.includes(o));
+
+  outfitFeedPool=[
+    ...outfitShuffle(matched,5),
+    ...outfitShuffle(rest,11)
+  ];
+  outfitFeedIndex=0;
+  outfitFeedCycle=0;
+  $('#outfitGrid').innerHTML='';
+  appendOutfitBatch();
+  appendOutfitBatch();
+  setupOutfitInfiniteScroll();
+}
+
 function renderOutfits(){
   const filter=$('#outfitStyleFilter');
-  const f=filter?.value||'all', p=progressData(), recent=p.recent||'';
-  const rec=recent?outfits.filter(o=>o.makeup?.includes(recent)):[];
+  const f=filter?.value||'all', recent=progressData().recent||'';
   const sync=$('#outfitMakeupSync');
+
   sync.textContent=recent
     ?(lang==='zh'?`依妝容推薦：${looks.find(l=>l.id===recent)?.name.zh||recent} · 點我查看妝容`:`Matched to makeup: ${looks.find(l=>l.id===recent)?.name.en||recent} · Tap to view`)
     :(lang==='zh'?'依妝容推薦：尚未選擇近期風格 · 點我選妝容':'Makeup match: no recent style selected · Tap to choose');
@@ -90,45 +254,19 @@ function renderOutfits(){
   const styles=['all','korean','japanese','clean','french','editorial','thai','y2k'];
   const styleNames={all:'All',korean:'Korean',japanese:'Japanese',clean:'Clean',french:'French',editorial:'Editorial',thai:'Thai',y2k:'Y2K'};
   const chips=$('#outfitStyleChips');
+
   if(chips){
     chips.innerHTML=styles.map(s=>`<button class="vibea-style-chip ${s===f?'active':''}" data-outfit-chip="${s}">${styleNames[s]}</button>`).join('');
-    $$('[data-outfit-chip]').forEach(b=>b.onclick=()=>{filter.value=b.dataset.outfitChip;renderOutfits()});
+    $$('[data-outfit-chip]').forEach(b=>b.onclick=()=>{
+      filter.value=b.dataset.outfitChip;
+      renderOutfits();
+    });
   }
 
-  const list=outfits.filter(o=>(f==='all'||o.style===f));
-  const ordered=[...list].sort((a,b)=>(rec.includes(b)?1:0)-(rec.includes(a)?1:0));
-  const saved=new Set(store.get('saved-outfits',[]));
-  const heights=['vibea-tall','vibea-mid','vibea-short','vibea-mid'];
-  $('#outfitGrid').innerHTML=ordered.map((o,i)=>{
-    const primaryMatch=(recent&&o.makeup?.includes(recent))?recent:(o.makeup?.[0]||'');
-    const matchLook=looks.find(l=>l.id===primaryMatch);
-    const matchedNow=recent&&o.makeup?.includes(recent);
-    const badgeLabel=matchLook
-      ?(lang==='zh'?`妝容配對 · ${matchLook.name.zh}`:`Match · ${matchLook.name.en}`)
-      :(lang==='zh'?'妝容配對':'Makeup match');
-    return `<article class="outfit-pin ${heights[i%heights.length]} ${matchedNow?'recommended-pin':''}">
-      <div class="outfit-image-wrap">
-        <img src="${o.image}" alt="${o.name[lang]}" loading="lazy" onerror="this.onerror=null;this.src=\'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=85\'">
-        
-        ${primaryMatch?`<button class="makeup-match-badge" type="button" data-match-look="${primaryMatch}" aria-label="${badgeLabel}">${badgeLabel}</button>`:''}
-        <button class="vibea-pin-save ${saved.has(o.id)?'saved':''}" type="button" data-save-outfit="${o.id}" aria-label="Save outfit">${saved.has(o.id)?'♥':'♡'}</button>
-      </div>
-      <div class="outfit-pin-copy"><small>${o.style.toUpperCase()}</small><h3>${o.name[lang]}</h3><p>${o.desc[lang]}</p><div class="card-actions">${o.items.map(it=>`<a href="${it.url}" target="_blank" rel="noopener">${it.label} ↗</a>`).join('')}</div></div>
-    </article>`;
-  }).join('')||`<p>${lang==='zh'?'這個分類目前沒有穿搭。':'No looks in this category yet.'}</p>`;
-
-  $$('[data-match-look]').forEach(b=>b.onclick=(e)=>{
-    e.preventDefault();
-    e.stopPropagation();
-    focusMatchedMakeup(b.dataset.matchLook);
-  });
-  $$('[data-save-outfit]').forEach(b=>b.onclick=()=>{
-    const d=new Set(store.get('saved-outfits',[]));
-    d.has(b.dataset.saveOutfit)?d.delete(b.dataset.saveOutfit):d.add(b.dataset.saveOutfit);
-    store.set('saved-outfits',[...d]); renderOutfits();
-  });
+  resetOutfitFeed();
 }
 $('#outfitStyleFilter').addEventListener('change',renderOutfits);
+
 function renderNews(){ $('#newsGrid').innerHTML=news.map(n=>`<article class="news-card"><span class="eyebrow">${n.source}</span><h3>${n.title[lang]}</h3><p>${n.body[lang]}</p><a href="${n.url}" target="_blank" rel="noopener">${lang==='zh'?'閱讀來源':'Read source'} ↗</a></article>`).join('') }
 function renderCeleb(){ const map={'K-POP':'korean','90s':'french','RED':'western','Y2K':'y2k'}; $('#celebGrid').innerHTML=celebrityLooks.map(c=>`<article class="saved-card celeb-card"><div class="celeb-photo-wrap"><img class="celeb-photo" src="${c.image}" alt="${c.name[lang]}" loading="lazy" onerror="this.onerror=null;this.src=\'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=85\'"><span class="celeb-chip">${c.code}</span></div><h3>${c.name[lang]}</h3><p>${c.desc[lang]}</p><button class="celeb-link" data-open-tutorial="${map[c.code]||'korean'}">${lang==='zh'?'看影片教學':'Video tutorial'} ↗</button></article>`).join(''); $$('[data-open-tutorial]').forEach(b=>b.onclick=()=>openTutorial(b.dataset.openTutorial)); }
 

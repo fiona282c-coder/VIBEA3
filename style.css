@@ -370,3 +370,49 @@ footer b{color:#5a4147}
 #wardrobe .outfit-hotspot{
   display:none !important;
 }
+
+
+/* V5 — Pinterest-style endless masonry */
+.outfit-feed-sentinel{
+  clear:both;
+  min-height:120px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#ad8b92;
+  font-size:12px;
+  letter-spacing:.04em;
+  padding:24px 0 110px;
+}
+.outfit-feed-sentinel::before{
+  content:'';
+  width:18px;
+  height:18px;
+  margin-right:9px;
+  border:2px solid #edcfd5;
+  border-top-color:#d88795;
+  border-radius:50%;
+  animation:vibeaSpin .8s linear infinite;
+}
+@keyframes vibeaSpin{to{transform:rotate(360deg)}}
+
+#outfitGrid{
+  column-fill:balance;
+}
+#outfitGrid .outfit-pin{
+  transform:translateZ(0);
+}
+#outfitGrid .outfit-pin-copy p{
+  display:none !important;
+}
+
+@media(max-width:720px){
+  #outfitGrid{
+    columns:2 145px !important;
+    column-gap:8px !important;
+  }
+  .outfit-feed-sentinel{
+    min-height:90px;
+    padding-bottom:100px;
+  }
+}

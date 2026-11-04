@@ -93,3 +93,12 @@ Face landmarks load the MediaPipe model from Google/CDN at runtime. If the user 
 - Added automatic fallback images for makeup, celebrity and outfit cards.
 - Removed clothing-image hotspot annotations from the Pinterest wardrobe feed.
 - Kept makeup-match buttons, save-heart buttons and product links below cards.
+
+
+## V5 — Endless Pinterest-style wardrobe
+- Expanded the built-in wardrobe pool to roughly 35–40 outfit ideas across Korean, Clean, Japanese, French, Editorial, Thai and Y2K.
+- Added automatic infinite scrolling with IntersectionObserver.
+- The next batch loads automatically before the user reaches the bottom.
+- After all built-in outfits are shown, the feed reshuffles and continues, so the static GitHub Pages experience has no visible end.
+- Existing makeup matching, saved-heart buttons and product links are preserved.
+- Clothing hotspot annotations remain removed.
