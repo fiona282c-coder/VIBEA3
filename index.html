@@ -338,6 +338,23 @@
     </section>
   </div>
 
-  <script type="module" src="script.js"></script>
+  
+<!-- Outfit Detail Modal -->
+<div id="outfitDetailModal" class="outfit-detail-modal" hidden>
+  <div class="outfit-detail-backdrop" data-close-outfit></div>
+  <section class="outfit-detail-card" role="dialog" aria-modal="true" aria-labelledby="outfitDetailTitle">
+    <button class="outfit-detail-close" type="button" data-close-outfit aria-label="Close">×</button>
+    <img id="outfitDetailImage" class="outfit-detail-image" src="" alt="">
+    <div class="outfit-detail-copy">
+      <span id="outfitDetailStyle" class="eyebrow"></span>
+      <h2 id="outfitDetailTitle"></h2>
+      <p id="outfitDetailDesc"></p>
+      <button id="outfitDetailMatch" class="secondary-btn" type="button"></button>
+      <div id="outfitDetailLinks" class="outfit-detail-links"></div>
+    </div>
+  </section>
+</div>
+
+<script type="module" src="script.js"></script>
 </body>
 </html>

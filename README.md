@@ -102,3 +102,17 @@ Face landmarks load the MediaPipe model from Google/CDN at runtime. If the user 
 - After all built-in outfits are shown, the feed reshuffles and continues, so the static GitHub Pages experience has no visible end.
 - Existing makeup matching, saved-heart buttons and product links are preserved.
 - Clothing hotspot annotations remain removed.
+
+
+## V6 — Clean Pinterest feed
+- The masonry feed is now image-first, like Pinterest.
+- Outfit cards no longer show titles, descriptions or product links under every image.
+- Tap an outfit image to open a detail modal.
+- The detail modal contains the outfit title, description, matched makeup and product/brand links.
+- Save-heart buttons remain directly on the masonry image.
+
+
+## V7 — centered mobile + button
+- The mobile bottom navigation + button is now absolutely centered at 50% of the navigation bar.
+- It remains centered across different iPhone widths.
+- Neighboring navigation items keep extra spacing so they do not collide with the center button.

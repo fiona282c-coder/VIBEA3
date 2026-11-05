@@ -134,37 +134,23 @@ function outfitShuffle(list, seed=0){
 }
 
 function buildOutfitCard(o, visualIndex){
-  const recent=progressData().recent||'';
   const saved=new Set(store.get('saved-outfits',[]));
-  const primaryMatch=(recent&&o.makeup?.includes(recent))?recent:(o.makeup?.[0]||'');
-  const matchLook=looks.find(l=>l.id===primaryMatch);
-  const matchedNow=!!(recent&&o.makeup?.includes(recent));
-  const badgeLabel=matchLook
-    ?(lang==='zh'?`妝容配對 · ${matchLook.name.zh}`:`Match · ${matchLook.name.en}`)
-    :(lang==='zh'?'妝容配對':'Makeup match');
   const heights=['vibea-tall','vibea-mid','vibea-short','vibea-mid','vibea-tall','vibea-short'];
 
-  return `<article class="outfit-pin ${heights[visualIndex%heights.length]} ${matchedNow?'recommended-pin':''}">
+  return `<article class="outfit-pin ${heights[visualIndex%heights.length]}" data-outfit-open="${o.id}">
     <div class="outfit-image-wrap">
       <img src="${o.image}" alt="${o.name[lang]}" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=85'">
-      ${primaryMatch?`<button class="makeup-match-badge" type="button" data-match-look="${primaryMatch}" aria-label="${badgeLabel}">${badgeLabel}</button>`:''}
       <button class="vibea-pin-save ${saved.has(o.id)?'saved':''}" type="button" data-save-outfit="${o.id}" aria-label="Save outfit">${saved.has(o.id)?'♥':'♡'}</button>
-    </div>
-    <div class="outfit-pin-copy">
-      <small>${o.style.toUpperCase()}</small>
-      <h3>${o.name[lang]}</h3>
-      <p>${o.desc[lang]}</p>
-      <div class="card-actions">${(o.items||[]).map(it=>`<a href="${it.url}" target="_blank" rel="noopener">${it.label} ↗</a>`).join('')}</div>
+      <span class="outfit-open-hint">${lang==='zh'?'點圖看搭配':'Tap for details'}</span>
     </div>
   </article>`;
 }
 
 function bindOutfitCardActions(scope=document){
-  scope.querySelectorAll('[data-match-look]').forEach(b=>{
-    b.onclick=(e)=>{
-      e.preventDefault();
-      e.stopPropagation();
-      focusMatchedMakeup(b.dataset.matchLook);
+  scope.querySelectorAll('[data-outfit-open]').forEach(card=>{
+    card.onclick=(e)=>{
+      if(e.target.closest('[data-save-outfit]')) return;
+      openOutfitDetail(card.dataset.outfitOpen);
     };
   });
   scope.querySelectorAll('[data-save-outfit]').forEach(b=>{
@@ -266,6 +252,41 @@ function renderOutfits(){
   resetOutfitFeed();
 }
 $('#outfitStyleFilter').addEventListener('change',renderOutfits);
+
+
+let activeOutfitId='';
+function openOutfitDetail(id){
+  const o=outfits.find(x=>x.id===id);
+  if(!o)return;
+  activeOutfitId=id;
+  const recent=progressData().recent||'';
+  const matchId=(recent&&o.makeup?.includes(recent))?recent:(o.makeup?.[0]||'');
+  const matchLook=looks.find(l=>l.id===matchId);
+
+  $('#outfitDetailImage').src=o.image;
+  $('#outfitDetailImage').alt=o.name[lang];
+  $('#outfitDetailStyle').textContent=o.style.toUpperCase();
+  $('#outfitDetailTitle').textContent=o.name[lang];
+  $('#outfitDetailDesc').textContent=o.desc[lang];
+
+  const matchBtn=$('#outfitDetailMatch');
+  if(matchLook){
+    matchBtn.hidden=false;
+    matchBtn.textContent=lang==='zh'?`查看配對妝容：${matchLook.name.zh}`:`View matched makeup: ${matchLook.name.en}`;
+    matchBtn.onclick=()=>{closeOutfitDetail();focusMatchedMakeup(matchLook.id)};
+  }else{
+    matchBtn.hidden=true;
+  }
+
+  $('#outfitDetailLinks').innerHTML=(o.items||[]).map(it=>`<a href="${it.url}" target="_blank" rel="noopener">${it.label} ↗</a>`).join('');
+  $('#outfitDetailModal').hidden=false;
+  document.body.classList.add('modal-open');
+}
+function closeOutfitDetail(){
+  $('#outfitDetailModal').hidden=true;
+  document.body.classList.remove('modal-open');
+}
+$$('[data-close-outfit]').forEach(x=>x.addEventListener('click',closeOutfitDetail));
 
 function renderNews(){ $('#newsGrid').innerHTML=news.map(n=>`<article class="news-card"><span class="eyebrow">${n.source}</span><h3>${n.title[lang]}</h3><p>${n.body[lang]}</p><a href="${n.url}" target="_blank" rel="noopener">${lang==='zh'?'閱讀來源':'Read source'} ↗</a></article>`).join('') }
 function renderCeleb(){ const map={'K-POP':'korean','90s':'french','RED':'western','Y2K':'y2k'}; $('#celebGrid').innerHTML=celebrityLooks.map(c=>`<article class="saved-card celeb-card"><div class="celeb-photo-wrap"><img class="celeb-photo" src="${c.image}" alt="${c.name[lang]}" loading="lazy" onerror="this.onerror=null;this.src=\'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=85\'"><span class="celeb-chip">${c.code}</span></div><h3>${c.name[lang]}</h3><p>${c.desc[lang]}</p><button class="celeb-link" data-open-tutorial="${map[c.code]||'korean'}">${lang==='zh'?'看影片教學':'Video tutorial'} ↗</button></article>`).join(''); $$('[data-open-tutorial]').forEach(b=>b.onclick=()=>openTutorial(b.dataset.openTutorial)); }
